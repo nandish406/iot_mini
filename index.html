@@ -50,7 +50,7 @@
     .then((res) => res.json())
     .then((data) => {
         data.forEach((row) => {
-        last_data = parseFloat((row.Device_Data/1023));
+        last_data = parseFloat((((row.Device_Data/1023)*2997)+3));
         });
         setGaugeValue(gaugeElement,last_data);
     });
