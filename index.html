@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pollution-monitor</title>
+    <link rel="stylesheet" href="./gauge.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <center><h2>Pollution monitoring</h2>
+    <div class="gauge">
+        <div class="gauge__body">
+          <div class="gauge__fill"></div>
+          <div class="gauge__cover"></div>
+        </div>
+    </div>
+</center>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+    const gaugeElement = document.querySelector(".gauge");
+
+    function setGaugeValue(gauge, value) {
+    if (value < 0 || value > 1) {
+        return;
+    }
+
+    gauge.querySelector(".gauge__fill").style.transform = `rotate(${
+        value / 2
+    }turn)`;
+    gauge.querySelector(".gauge__cover").textContent = `${Math.round(
+        value * 100
+    )}PPI`;
+    }
+    /////////////Ajax Requests////////////
+    $(document).ready(function() {
+        // Fetch the initial Value
+        refreshValue();
+
+        // Fetch every 5 second
+        setInterval(refreshValue, 1);
+    });
+
+    function refreshValue(){
+    var last_data;
+    fetch(
+    "https://opensheet.elk.sh/1BXCTD-lnDF0Ng_opNoGbm7rmeDVP0BU--aPwjEBYymE/Sheet1"
+    )
+    .then((res) => res.json())
+    .then((data) => {
+        data.forEach((row) => {
+        last_data = parseFloat(row.Device_Data);
+        });
+        setGaugeValue(gaugeElement,last_data);
+    });
+    }
+
+</script>
